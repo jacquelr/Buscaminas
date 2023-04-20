@@ -4,19 +4,58 @@
  */
 package buscaminas;
 
+import clases.Acciones;
+import java.awt.GridLayout;
+import javax.swing.JButton;
+import java.awt.event.*;
+
+
 /**
  *
  * @author jacqueline
  */
 public class VtnPrincipal extends javax.swing.JFrame {
 
+    private int filas = 10;
+    private int columnas = 10;
+    private int minas = 0;
+    private JButton[][] matrizBotones;
+    private int [][] matrizLogica;
+    
     /**
      * Creates new form VtnPrincipal
      */
     public VtnPrincipal() {
         initComponents();
+        setLayout(new GridLayout (filas, columnas));
+        inicializarMatrices();
+        crearMinas();
     }
 
+    public void inicializarMatrices(){
+        matrizLogica = new int [filas][columnas];
+        matrizBotones = new JButton[filas][columnas];
+        for (int i = 0; i < filas; i++) {
+            for (int j = 0; j < columnas; j++) {
+                matrizBotones[i][j] = new JButton();
+                add(matrizBotones[i][j]);
+                matrizBotones[i][j].addActionListener(new Acciones(i, j));
+            }
+        }
+    }
+    
+    public void crearMinas(){
+        int aux = 0;
+        while (aux < minas) {
+            int fila = (int)(Math.random() * filas);
+            int columna = (int)(Math.random() * columnas);
+            if (matrizLogica[fila][columna] != -1) {
+                matrizLogica[fila][columna] = -1;
+                aux++;
+            }
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -26,21 +65,79 @@ public class VtnPrincipal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        fondo = new javax.swing.JPanel();
+        panelBotones = new javax.swing.JPanel();
+        tituloBuscaminas = new javax.swing.JLabel();
+        btnReiniciar = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
+
+        fondo.setBackground(new java.awt.Color(255, 241, 247));
+
+        panelBotones.setBackground(new java.awt.Color(241, 252, 255));
+        panelBotones.setPreferredSize(new java.awt.Dimension(395, 395));
+        panelBotones.setLayout(new java.awt.GridLayout());
+
+        tituloBuscaminas.setFont(new java.awt.Font("Silom", 0, 36)); // NOI18N
+        tituloBuscaminas.setText("B U S C A M I N A S");
+
+        btnReiniciar.setBackground(new java.awt.Color(0, 0, 0));
+        btnReiniciar.setForeground(new java.awt.Color(255, 255, 255));
+        btnReiniciar.setText("REINICIAR");
+        btnReiniciar.setToolTipText("");
+        btnReiniciar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReiniciarActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout fondoLayout = new javax.swing.GroupLayout(fondo);
+        fondo.setLayout(fondoLayout);
+        fondoLayout.setHorizontalGroup(
+            fondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(fondoLayout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addGroup(fondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(fondoLayout.createSequentialGroup()
+                        .addComponent(tituloBuscaminas)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(fondoLayout.createSequentialGroup()
+                        .addComponent(panelBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 97, Short.MAX_VALUE)
+                        .addComponent(btnReiniciar)
+                        .addGap(62, 62, 62))))
+        );
+        fondoLayout.setVerticalGroup(
+            fondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(fondoLayout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addGroup(fondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btnReiniciar)
+                    .addGroup(fondoLayout.createSequentialGroup()
+                        .addComponent(tituloBuscaminas)
+                        .addGap(18, 18, 18)
+                        .addComponent(panelBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(19, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addComponent(fondo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addComponent(fondo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnReiniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReiniciarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnReiniciarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -78,5 +175,9 @@ public class VtnPrincipal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnReiniciar;
+    private javax.swing.JPanel fondo;
+    private javax.swing.JPanel panelBotones;
+    private javax.swing.JLabel tituloBuscaminas;
     // End of variables declaration//GEN-END:variables
 }
