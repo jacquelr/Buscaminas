@@ -142,7 +142,15 @@ public class VtnPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnReiniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReiniciarActionPerformed
-        // TODO add your handling code here:
+        for (int i=0;i<filas;i++){
+            for (int j=0;j<columnas;j++){
+                matrizLogica[i][j]= 0;
+                matrizBotones[i][j].setEnabled(true);
+                matrizBotones[i][j].setText("");
+            }
+        }
+        crearMinas();
+        metodoInundacion();
     }//GEN-LAST:event_btnReiniciarActionPerformed
 
     /**
