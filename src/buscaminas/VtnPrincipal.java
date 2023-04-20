@@ -7,7 +7,6 @@ package buscaminas;
 import clases.Acciones;
 import java.awt.GridLayout;
 import javax.swing.JButton;
-import java.awt.event.*;
 
 
 /**
@@ -16,9 +15,9 @@ import java.awt.event.*;
  */
 public class VtnPrincipal extends javax.swing.JFrame {
 
-    private int filas = 10;
-    private int columnas = 10;
-    private int minas = 0;
+    private int filas = 8;
+    private int columnas = 8;
+    private int minas = 6;
     private JButton[][] matrizBotones;
     private int [][] matrizLogica;
     
@@ -27,9 +26,10 @@ public class VtnPrincipal extends javax.swing.JFrame {
      */
     public VtnPrincipal() {
         initComponents();
-        setLayout(new GridLayout (filas, columnas));
+        panelBotones.setLayout(new GridLayout (filas, columnas));
         inicializarMatrices();
         crearMinas();
+        metodoInundacion();
     }
 
     public void inicializarMatrices(){
@@ -38,8 +38,8 @@ public class VtnPrincipal extends javax.swing.JFrame {
         for (int i = 0; i < filas; i++) {
             for (int j = 0; j < columnas; j++) {
                 matrizBotones[i][j] = new JButton();
-                add(matrizBotones[i][j]);
-                matrizBotones[i][j].addActionListener(new Acciones(i, j));
+                panelBotones.add(matrizBotones[i][j]);
+                matrizBotones[i][j].addActionListener(new Acciones(matrizLogica,matrizBotones,minas,filas,columnas,i, j));
             }
         }
     }
@@ -52,10 +52,30 @@ public class VtnPrincipal extends javax.swing.JFrame {
             if (matrizLogica[fila][columna] != -1) {
                 matrizLogica[fila][columna] = -1;
                 aux++;
+                System.out.println("fila: " + (fila+1));
+                System.out.println("columna: " + (columna+1));
             }
         }
     }
     
+    public void metodoInundacion(){
+        for (int i = 0; i < filas; i++) {
+            for (int j = 0; j < columnas; j++) {
+                if (matrizLogica[i][j] != -1) {
+                    int minasAlrededor = 0;
+                    if (i > 0 && j > 0 && matrizLogica[i-1][j-1] == -1) minasAlrededor++;
+                    if (i > 0 && matrizLogica[i-1][j] == -1) minasAlrededor++;
+                    if (i > 0 && j < columnas-1 && matrizLogica[i-1][j+1] == -1) minasAlrededor++;
+                    if (j > 0 && matrizLogica[i][j-1] == -1) minasAlrededor++;
+                    if (j < columnas-1 && matrizLogica[i][j+1] == -1) minasAlrededor++;
+                    if (i < filas-1 && j > 0 && matrizLogica[i+1][j-1] == -1) minasAlrededor++;
+                    if (i < filas-1 && matrizLogica[i+1][j] == -1) minasAlrededor++;
+                    if (i < filas-1 && j < columnas-1 && matrizLogica[i+1][j+1] == -1) minasAlrededor++;
+                    matrizLogica[i][j] = minasAlrededor;
+                }
+            }
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -74,13 +94,27 @@ public class VtnPrincipal extends javax.swing.JFrame {
         setResizable(false);
 
         fondo.setBackground(new java.awt.Color(255, 241, 247));
+        fondo.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         panelBotones.setBackground(new java.awt.Color(241, 252, 255));
         panelBotones.setPreferredSize(new java.awt.Dimension(395, 395));
-        panelBotones.setLayout(new java.awt.GridLayout());
+
+        javax.swing.GroupLayout panelBotonesLayout = new javax.swing.GroupLayout(panelBotones);
+        panelBotones.setLayout(panelBotonesLayout);
+        panelBotonesLayout.setHorizontalGroup(
+            panelBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 395, Short.MAX_VALUE)
+        );
+        panelBotonesLayout.setVerticalGroup(
+            panelBotonesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 395, Short.MAX_VALUE)
+        );
+
+        fondo.add(panelBotones, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 80, -1, -1));
 
         tituloBuscaminas.setFont(new java.awt.Font("Silom", 0, 36)); // NOI18N
         tituloBuscaminas.setText("B U S C A M I N A S");
+        fondo.add(tituloBuscaminas, new org.netbeans.lib.awtextra.AbsoluteConstraints(32, 26, -1, -1));
 
         btnReiniciar.setBackground(new java.awt.Color(0, 0, 0));
         btnReiniciar.setForeground(new java.awt.Color(255, 255, 255));
@@ -91,45 +125,17 @@ public class VtnPrincipal extends javax.swing.JFrame {
                 btnReiniciarActionPerformed(evt);
             }
         });
-
-        javax.swing.GroupLayout fondoLayout = new javax.swing.GroupLayout(fondo);
-        fondo.setLayout(fondoLayout);
-        fondoLayout.setHorizontalGroup(
-            fondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(fondoLayout.createSequentialGroup()
-                .addGap(32, 32, 32)
-                .addGroup(fondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(fondoLayout.createSequentialGroup()
-                        .addComponent(tituloBuscaminas)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(fondoLayout.createSequentialGroup()
-                        .addComponent(panelBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 97, Short.MAX_VALUE)
-                        .addComponent(btnReiniciar)
-                        .addGap(62, 62, 62))))
-        );
-        fondoLayout.setVerticalGroup(
-            fondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(fondoLayout.createSequentialGroup()
-                .addGap(26, 26, 26)
-                .addGroup(fondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnReiniciar)
-                    .addGroup(fondoLayout.createSequentialGroup()
-                        .addComponent(tituloBuscaminas)
-                        .addGap(18, 18, 18)
-                        .addComponent(panelBotones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(19, Short.MAX_VALUE))
-        );
+        fondo.add(btnReiniciar, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 390, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(fondo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(fondo, javax.swing.GroupLayout.DEFAULT_SIZE, 658, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(fondo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(fondo, javax.swing.GroupLayout.DEFAULT_SIZE, 537, Short.MAX_VALUE)
         );
 
         pack();
